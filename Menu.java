@@ -9,6 +9,9 @@ public class Menu {
             System.out.println("-- Menu --");
             System.out.println("1. Logout");
             System.out.println("2. Stanje racuna");
+            System.out.println("3. Placanje");
+            System.out.println("4. Popis transakcija");
+            System.out.println("5. Tecajna lista");
 
             int choice = scanner.nextInt();
             switch (choice) {
@@ -16,7 +19,17 @@ public class Menu {
                     loggedIn = logoutConfirm();
                     break;
                 case 2:
-                    stanjeRacuna.checkBalance();
+                    stanjeRacuna.checkStanje();
+                    break;
+                case 3:
+                    Placanje.uplati();
+
+                    break;
+                case 4:
+
+                    break;
+                case 5:
+
                     break;
                 default:
                     System.out.println("Pogreška");

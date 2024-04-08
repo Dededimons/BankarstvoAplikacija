@@ -7,7 +7,7 @@ public class Login {
     private static final String USERNAME = "admin";
     private static final String PASSWORD = encryptPassword("admin");
     private static final String RACUN = "12345";
-    private static final double STANJE = 1000.00;
+    private static double STANJE = 1000.00;
     private static final String VALUTA = "EUR";
 
     public static String getRacun() {
@@ -20,6 +20,10 @@ public class Login {
 
     public static String getValuta() {
         return VALUTA;
+    }
+
+    public static void setStanje(double newValue) {
+        STANJE = newValue;
     }
 
 
