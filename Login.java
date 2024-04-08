@@ -6,8 +6,25 @@ public class Login {
 
     private static final String USERNAME = "admin";
     private static final String PASSWORD = encryptPassword("admin");
+    private static final String RACUN = "12345";
+    private static final double STANJE = 1000.00;
+    private static final String VALUTA = "EUR";
 
-    public static void main(String[] args) {
+    public static String getRacun() {
+        return RACUN;
+    }
+
+    public static double getStanje() {
+        return STANJE;
+    }
+
+    public static String getValuta() {
+        return VALUTA;
+    }
+
+
+
+    public static boolean login() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("-- Prijava u aplikaciju --");
@@ -17,8 +34,10 @@ public class Login {
 
         if (username.equals(USERNAME) && encryptPassword(new String(password)).equals(PASSWORD)) {
             System.out.println("Prijava uspješna");
+            return true;
         } else {
             System.out.println("Prijava neuspješna");
+            return false;
         }
     }
 
