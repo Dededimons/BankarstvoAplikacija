@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -8,7 +10,13 @@ public class Placanje {
 
         System.out.println("-- Placanje --");
         System.out.print("Upisi IBAN: ");
-        String iban = scanner.nextLine();
+        
+        String iban;
+        do {
+            System.out.print("Upiši IBAN: ");
+            iban = scanner.nextLine();
+        } while (iban.length() != 32);
+        
 
         System.out.print("Upisi iznos placanja: ");
         double value = scanner.nextDouble();
@@ -25,7 +33,8 @@ public class Placanje {
         }
 
         if (uzmiPare(value)) {
-            System.out.println(" Placanje uspjesno ");
+            System.out.println("Placanje uspjesno");
+            savePaymentToFile(iban, value, dateString);
         } else {
             System.out.println("Greska");
         }
@@ -39,6 +48,16 @@ public class Placanje {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private static void savePaymentToFile(String iban, double value, String dateString) {
+        try {
+            FileWriter writer = new FileWriter("payments.txt", true);
+            writer.write("IBAN: " + iban + ", Iznos: " + value + ", Datum: " + dateString + "\n");
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Greška: " + e.getMessage());
         }
     }
 }
