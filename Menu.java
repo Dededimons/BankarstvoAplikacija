@@ -26,11 +26,13 @@ public class Menu {
 
                     break;
                 case 4:
+                    popisTransakcija.displayPayments();
 
                     break;
                 case 5:
 
                     break;
+                    
                 default:
                     System.out.println("Pogreška");
             }
