@@ -26,11 +26,11 @@ public class Menu {
 
                     break;
                 case 4:
-                    popisTransakcija.displayPayments();
+                    popisTransakcija.displayPayments(null);
 
                     break;
                 case 5:
-
+                    tecajnaLista.getTecajnaLista();
                     break;
                     
                 default:
