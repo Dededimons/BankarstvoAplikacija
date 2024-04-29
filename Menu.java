@@ -26,7 +26,7 @@ public class Menu {
 
                     break;
                 case 4:
-                    popisTransakcija.displayPayments(null);
+                    popisTransakcija.displayPayments();
 
                     break;
                 case 5:

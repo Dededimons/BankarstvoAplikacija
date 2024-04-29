@@ -15,7 +15,7 @@ public class Placanje {
         do {
             System.out.print("Upiši IBAN: ");
             iban = scanner.nextLine();
-        } while (iban.length() != 32);
+        } while (!isValidIBANFormat(iban));
         
 
         System.out.print("Upisi iznos placanja: ");
@@ -59,5 +59,23 @@ public class Placanje {
         } catch (IOException e) {
             System.out.println("Greška: " + e.getMessage());
         }
+    }
+    private static boolean isValidIBANFormat(String iban) {
+        if (iban == null || iban.isEmpty()) {
+            System.out.println("IBAN cannot be empty.");
+            return false;
+        }
+
+        if (iban.length() < 15 || iban.length() > 34) {
+            System.out.println("IBAN must be exactly 32 characters long.");
+            return false;
+        }
+
+        if (!iban.matches("[a-zA-Z0-9]+")) {
+            System.out.println("IBAN must contain only alphanumeric characters.");
+            return false;
+        }
+
+        return true;
     }
 }
