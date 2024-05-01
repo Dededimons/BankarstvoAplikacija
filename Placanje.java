@@ -1,81 +1,79 @@
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Placanje {
+    private static final String DATABASE_URL = "jdbc:sqlite:baza.db";
+
     public static void uplati() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("-- Placanje --");
-        System.out.print("Upisi IBAN: ");
-        
-        String iban;
-        do {
-            System.out.print("Upiši IBAN: ");
-            iban = scanner.nextLine();
-        } while (!isValidIBANFormat(iban));
-        
+        System.out.print("Upiši IBAN primatelja: ");
+        String receiverIban = scanner.nextLine();
 
-        System.out.print("Upisi iznos placanja: ");
-        double value = scanner.nextDouble();
+        System.out.print("Upiši iznos placanja: ");
+        double amount = scanner.nextDouble();
 
-        System.out.print("Datum (dd/mm/yyyy): ");
-        String dateString = scanner.next();
-        Date datum;
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            datum = dateFormat.parse(dateString);
-        } catch (Exception e) {
-            System.out.println("Krivi format datuma");
-            return;
-        }
+        // Get the sender's IBAN from the database or any other method you use for authentication
+        String senderIban = Login.getIBAN(); // Replace with the actual sender's IBAN
 
-        if (uzmiPare(value)) {
+        // Update account balances in the database
+        if (updateAccountBalances(senderIban, receiverIban, amount)) {
             System.out.println("Placanje uspjesno");
-            savePaymentToFile(iban, value, dateString);
         } else {
             System.out.println("Greska");
         }
     }
 
-    private static boolean uzmiPare(double iznos) {
-        double stanje = Login.getStanje();
-        if (stanje >= iznos) {
-            double novoStanje = stanje - iznos;
-            Login.setStanje(novoStanje);
+    private static boolean updateAccountBalances(String senderIban, String receiverIban, double amount) {
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
+            // Check if sender has sufficient balance
+            double senderBalance = getAccountBalance(connection, senderIban);
+            if (senderBalance < amount) {
+                System.out.println("Nedovoljno sredstava na računu.");
+                return false;
+            }
+
+            // Update sender's balance
+            double newSenderBalance = senderBalance - amount;
+            updateAccountBalance(connection, senderIban, newSenderBalance);
+
+            // Update receiver's balance
+            double receiverBalance = getAccountBalance(connection, receiverIban);
+            double newReceiverBalance = receiverBalance + amount;
+            updateAccountBalance(connection, receiverIban, newReceiverBalance);
+
             return true;
-        } else {
+        } catch (SQLException e) {
+            System.err.println("Greška pri ažuriranju računa: " + e.getMessage());
             return false;
         }
     }
 
-    private static void savePaymentToFile(String iban, double value, String dateString) {
-        try {
-            FileWriter writer = new FileWriter("payments.txt", true);
-            writer.write("IBAN: " + iban + ", Iznos: " + value + ", Datum: " + dateString + "\n");
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("Greška: " + e.getMessage());
+    private static double getAccountBalance(Connection connection, String iban) throws SQLException {
+        String query = "SELECT iznos FROM korisnik WHERE iban = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, iban);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getDouble("iznos");
+                } else {
+                    throw new SQLException("Account not found for IBAN: " + iban);
+                }
+            }
         }
     }
-    private static boolean isValidIBANFormat(String iban) {
-        if (iban == null || iban.isEmpty()) {
-            System.out.println("IBAN cannot be empty.");
-            return false;
-        }
 
-        if (iban.length() < 15 || iban.length() > 34) {
-            System.out.println("IBAN must be exactly 32 characters long.");
-            return false;
+    private static void updateAccountBalance(Connection connection, String iban, double newBalance) throws SQLException {
+        String query = "UPDATE korisnik SET iznos = ? WHERE iban = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setDouble(1, newBalance);
+            statement.setString(2, iban);
+            statement.executeUpdate();
         }
-
-        if (!iban.matches("[a-zA-Z0-9]+")) {
-            System.out.println("IBAN must contain only alphanumeric characters.");
-            return false;
-        }
-
-        return true;
     }
 }

@@ -15,3 +15,15 @@ INSERT INTO korisnik (id, username, password, ime, prezime,  iznos, iban)
 VALUES (2, "test2", "test2", "Ivo", "Ivic", 1000, "HR98765432101234");
 
 SELECT * from korisnik
+
+CREATE TABLE placanja (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    placa TEXT,
+    prima TEXT,
+    iznos REAL,
+    datum TEXT
+);
+
+DROP TABLE placanja;
+
+SELECT * from placanja
