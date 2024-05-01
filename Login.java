@@ -1,68 +1,75 @@
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Login {
 
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = encryptPassword("admin");
-    private static final String RACUN = "12345";
-    private static double STANJE = 1000.00;
-    private static final String VALUTA = "EUR";
+    private static final String DATABASE_URL = "jdbc:sqlite:baza.db";
 
-    public static String getRacun() {
-        return RACUN;
+    // Fields to hold account information
+    private static String ime;
+    private static String prezime;
+    private static String iban;
+    private static double iznos;
+    private static String valuta;
+
+    // Getter methods for account information
+    public static String getIme() {
+        return ime;
+    }
+    public static String getPrezime() {
+        return prezime;
     }
 
-    public static double getStanje() {
-        return STANJE;
+    public static String getIBAN() {
+        return iban;
+    }
+
+    public static double getIznos() {
+        return iznos;
     }
 
     public static String getValuta() {
-        return VALUTA;
+        return valuta;
     }
-
-    public static void setStanje(double newValue) {
-        STANJE = newValue;
-    }
-
-
 
     public static boolean login() {
         Scanner scanner = new Scanner(System.in);
-
+    
         System.out.println("-- Prijava u aplikaciju --");
         System.out.print("Upišite ime: ");
         String username = scanner.nextLine();
-        char[] password = getPasswordFromConsole();
+        System.out.print("Upišite lozinku: ");
+        String password = scanner.nextLine();
+    
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
+            String query = "SELECT ime, prezime, iban, iznos FROM korisnik WHERE username = ? AND password = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, username);
+                statement.setString(2, password);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        // Retrieve account information from the database
+                        ime = resultSet.getString("ime");
+                        prezime = resultSet.getString("prezime");
+                        iban = resultSet.getString("iban");
+                        iznos = resultSet.getDouble("iznos");
 
-        if (username.equals(USERNAME) && encryptPassword(new String(password)).equals(PASSWORD)) {
-            System.out.println("Prijava uspješna");
-            return true;
-        } else {
-            System.out.println("Prijava neuspješna");
+                        
+                        System.out.println("Prijava uspješna");
+                        return true;
+                    } else {
+                        System.out.println("Prijava neuspješna");
+                        return false;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Greška pri spajanju na bazu podataka: " + e.getMessage());
             return false;
         }
-    }
-
-    private static String encryptPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] hashedBytes = md.digest(password.getBytes());
-
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Greška " + e.getMessage());
-            return null;
-        }
-    }
-
-    private static char[] getPasswordFromConsole() {
-        System.out.print("Upišite lozinku: ");
-        return System.console().readPassword();
     }
 }

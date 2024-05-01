@@ -23,7 +23,6 @@ public class Menu {
                     break;
                 case 3:
                     Placanje.uplati();
-
                     break;
                 case 4:
                     popisTransakcija.displayPayments();

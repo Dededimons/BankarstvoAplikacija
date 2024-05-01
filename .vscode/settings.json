@@ -2,6 +2,8 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "c:\\Users\\erikt\\Downloads\\json-20240303.jar",
-        "json-20240303.jar"
+        "json-20240303.jar",
+        "sqlite-jdbc-3.45.3.0.jar",
+        "slf4j-api-1.7.36.jar"
     ]
 }
