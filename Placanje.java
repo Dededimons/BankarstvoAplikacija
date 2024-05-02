@@ -59,20 +59,30 @@ public class Placanje {
     }
 
     private static boolean updateAccountBalances(String senderIban, String receiverIban, double amount) {
+        if (amount <= 0) {
+            System.out.println("Iznos placanja mora biti pozitivan.");
+            return false;
+        }
+    
         try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
             double senderBalance = getAccountBalance(connection, senderIban);
             if (senderBalance < amount) {
                 System.out.println("Nedovoljno sredstava na računu.");
                 return false;
             }
-
+    
             double newSenderBalance = senderBalance - amount;
-            updateAccountBalance(connection, senderIban, newSenderBalance);
-
             double receiverBalance = getAccountBalance(connection, receiverIban);
             double newReceiverBalance = receiverBalance + amount;
+    
+            if (newReceiverBalance < 0) {
+                System.out.println("Iznos placanja ne moze biti negativan.");
+                return false;
+            }
+    
+            updateAccountBalance(connection, senderIban, newSenderBalance);
             updateAccountBalance(connection, receiverIban, newReceiverBalance);
-
+    
             return true;
         } catch (SQLException e) {
             System.err.println("Greška pri ažuriranju računa: " + e.getMessage());
