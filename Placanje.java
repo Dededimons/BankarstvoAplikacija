@@ -44,6 +44,18 @@ public class Placanje {
         } catch (IOException e) {
             System.out.println("Greška prilikom zapisivanja plaćanja u datoteku: " + e.getMessage());
         }
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
+            String query = "INSERT INTO placanja (placa, prima, iznos, datum) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, senderIban);
+                statement.setString(2, receiverIban);
+                statement.setDouble(3, amount);
+                statement.setString(4, dateString);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.err.println("Greška pri spremanju u bazu podataka: " + e.getMessage());
+        }
     }
 
     private static boolean updateAccountBalances(String senderIban, String receiverIban, double amount) {
