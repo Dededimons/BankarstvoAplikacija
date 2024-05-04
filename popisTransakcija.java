@@ -58,11 +58,8 @@ public class popisTransakcija {
             BufferedReader reader = new BufferedReader(new FileReader("placanja.txt"));
             String line;
             while ((line = reader.readLine()) != null) {
-                // Split the line into parts
                 String[] parts = line.split(", ");
-                // Extract sender's IBAN from the line
-                String senderIBAN = parts[1].substring(7); // Assuming the sender is always after "Šalje: "
-                // Check if the sender's IBAN matches the current user's IBAN
+                String senderIBAN = parts[1].substring(7);
                 if (senderIBAN.equals(currentUserIBAN)) {
                     System.out.println(line);
                 }
