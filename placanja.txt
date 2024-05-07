@@ -1,4 +1,18 @@
-Datum: 02/05/2024 16:23:01, �alje: HR123456789012345, Prima: HR98765432101234, Iznos: 10.0
-Datum: 02/05/2024 16:23:34, �alje: HR123456789012345, Prima: HR98765432101234, Iznos: 69.0
-Datum: 02/05/2024 16:24:21, �alje: HR98765432101234, Prima: HR123456789012345, Iznos: 234.0
-Datum: 02/05/2024 16:24:33, �alje: HR98765432101234, Prima: HR123456789012345, Iznos: 42.0
+Datum: 02/05/2024 16:23:01, �alje: HR123456789012345, Prima: HR98765432101234, Iznos: 10.0
+Datum: 02/05/2024 16:23:34, �alje: HR123456789012345, Prima: HR98765432101234, Iznos: 69.0
+Datum: 02/05/2024 16:24:21, �alje: HR98765432101234, Prima: HR123456789012345, Iznos: 234.0
+Datum: 02/05/2024 16:24:33, �alje: HR98765432101234, Prima: HR123456789012345, Iznos: 42.0
+Datum: 07/05/2024 14:06:27, �alje: HR123456789012345, Prima: HR98765432101234, Iznos: 2.0
+Datum: 07/05/2024 14:25:42, Šalje: HR123, Prima: HR2, Iznos: 10.0
+Datum: 07/05/2024 14:27:08, Šalje: HR123, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 14:32:58, Šalje: HR123, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 14:34:52, Šalje: HR1, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 14:34:59, Šalje: HR1, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 14:35:01, Šalje: HR1, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 14:35:47, Šalje: HR1, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 14:35:48, Šalje: HR1, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 14:35:50, Šalje: HR1, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 14:42:36, �alje: HR123456789012345, Prima: HR98765432101234, Iznos: 5.0
+Datum: 07/05/2024 14:55:27, Šalje: HR1, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 15:23:57, Šalje: HR1, Prima: HR2, Iznos: 200.0
+Datum: 07/05/2024 15:25:09, Šalje: HR1, Prima: HR2, Iznos: 200.0

@@ -7,14 +7,12 @@ import java.util.Scanner;
 
 public class Login {
 
-    private static final String DATABASE_URL = "jdbc:sqlite:baza.db";
-
+    static final String DATABASE_URL = "jdbc:sqlite:baza.db";
     private static String username;
     private static String ime;
     private static String prezime;
     private static String iban;
     private static double iznos;
-    private static String valuta;
 
     public static String getUsername() {
         return username;
@@ -23,6 +21,7 @@ public class Login {
     public static String getIme() {
         return ime;
     }
+
     public static String getPrezime() {
         return prezime;
     }
@@ -35,40 +34,20 @@ public class Login {
         return iznos;
     }
 
-    public static String getValuta() {
-        return valuta;
-    }
-
     public static boolean login() {
         Scanner scanner = new Scanner(System.in);
-    
+
         System.out.println("-- Prijava u aplikaciju --");
         System.out.print("Upišite username: ");
-        String username = scanner.nextLine();
+        String usernameInput = scanner.nextLine();
         System.out.print("Upišite lozinku: ");
-        String password = scanner.nextLine();
-    
-        try (Connection connection = DriverManager.getConnection(DATABASE_URL)) {
-            String query = "SELECT username, ime, prezime, iban, iznos FROM korisnik WHERE username = ? AND password = ?";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, username);
-                statement.setString(2, password);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        username = resultSet.getString("username");
-                        ime = resultSet.getString("ime");
-                        prezime = resultSet.getString("prezime");
-                        iban = resultSet.getString("iban");
-                        iznos = resultSet.getDouble("iznos");
+        String passwordInput = scanner.nextLine();
 
-                        
-                        System.out.println("Prijava uspješna");
-                        return true;
-                    } else {
-                        System.out.println("Prijava neuspješna");
-                        return false;
-                    }
-                }
+        try (Connection connection = establishConnection()) {
+            if (connection != null) {
+                return executeQuery(connection, usernameInput, passwordInput);
+            } else {
+                return false;
             }
         } catch (SQLException e) {
             System.err.println("Greška pri spajanju na bazu podataka: " + e.getMessage());
@@ -76,4 +55,53 @@ public class Login {
         }
     }
 
+     static Connection establishConnection() throws SQLException {
+        return DriverManager.getConnection(DATABASE_URL);
+    }
+
+    private static boolean executeQuery(Connection connection, String usernameInput, String passwordInput) throws SQLException {
+        String query = "SELECT username, ime, prezime, iban, iznos FROM korisnik WHERE username = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, usernameInput);
+            statement.setString(2, passwordInput);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    setUsername(resultSet.getString("username"));
+                    setIme(resultSet.getString("ime"));
+                    setPrezime(resultSet.getString("prezime"));
+                    setIBAN(resultSet.getString("iban"));
+                    setIznos(resultSet.getDouble("iznos"));
+                    System.out.println("Prijava uspješna");
+                    return true;
+                } else {
+                    System.out.println("Prijava neuspješna");
+                    return false;
+                }
+            }
+        }
+    }
+
+    static void setUsername(String user) {
+        username = user;
+    }
+
+     static void setIme(String name) {
+        ime = name;
+    }
+
+     static void setPrezime(String surname) {
+        prezime = surname;
+    }
+
+     static void setIBAN(String accountNumber) {
+        iban = accountNumber;
+    }
+
+     static void setIznos(double amount) {
+        iznos = amount;
+    }
+
+    public static void logout() {
+        username = null;
+    }
 }

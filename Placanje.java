@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.Date;
 
 public class Placanje {
-    private static final String DATABASE_URL = "jdbc:sqlite:baza.db";
+     static final String DATABASE_URL = "jdbc:sqlite:baza.db";
 
     public static void uplati() {
         Scanner scanner = new Scanner(System.in);
@@ -34,7 +34,7 @@ public class Placanje {
         }
     }
 
-    private static void savePaymentToFile(String senderIban, String receiverIban, double amount, String dateString) {
+     static void savePaymentToFile(String senderIban, String receiverIban, double amount, String dateString) {
         try {
             FileWriter writer = new FileWriter("placanja.txt", true);
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -58,7 +58,7 @@ public class Placanje {
         }
     }
 
-    private static boolean updateAccountBalances(String senderIban, String receiverIban, double amount) {
+     static boolean updateAccountBalances(String senderIban, String receiverIban, double amount) {
         if (amount <= 0) {
             System.out.println("Iznos placanja mora biti pozitivan.");
             return false;
@@ -90,7 +90,7 @@ public class Placanje {
         }
     }
 
-    private static double getAccountBalance(Connection connection, String iban) throws SQLException {
+     static double getAccountBalance(Connection connection, String iban) throws SQLException {
         String query = "SELECT iznos FROM korisnik WHERE iban = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, iban);
@@ -98,13 +98,13 @@ public class Placanje {
                 if (resultSet.next()) {
                     return resultSet.getDouble("iznos");
                 } else {
-                    throw new SQLException("Account not found for IBAN: " + iban);
+                    throw new SQLException("Racun ne postoji za: " + iban);
                 }
             }
         }
     }
 
-    private static void updateAccountBalance(Connection connection, String iban, double newBalance) throws SQLException {
+     static void updateAccountBalance(Connection connection, String iban, double newBalance) throws SQLException {
         String query = "UPDATE korisnik SET iznos = ? WHERE iban = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setDouble(1, newBalance);

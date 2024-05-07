@@ -51,7 +51,7 @@ public class popisTransakcija {
         }
     }
 
-    private static void displayPaymentsFromFile() {
+    static void displayPaymentsFromFile() {
         System.out.println("-- Popis transakcija iz placanja.txt --");
         String currentUserIBAN = Login.getIBAN();
         try {
